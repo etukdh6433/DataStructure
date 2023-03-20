@@ -2,81 +2,78 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define N 3
 #define MAX_TERMS 9
+#define MAX 50
 
-void transpose (int a[][N], int b[][N]);
-void mmult(int a[][N], int b[][N], int d[][N]);
-void storeSum(int d[][N], int* totalD, int row, int col, int* sum);
-int COMPARE(int a, int b);
+typedef struct {
+	int row;
+	int col;
+	int val;
+}term;
+
+void transpose (term a[], term b[]);
+void mmult(term a[], term b[], term d[]);
+void storeSum(term d[], int* totalD, int row, int col, int* sum);
+int COMPARE(int x, int y);
 
 int main(void)
 {
-	int A[9][3] = { {6,6,8}, {0,0,5}, {0,3,2}, {0,5,-5}, {1,1,1}, {1,2,3}, {2,3,-6}, {4,0,1}, {5,2,6} };
-	int B[9][3];
-	int D[10][3];
+	term A[MAX_TERMS] = { 6,6,8,0,0,15,0,3,22,0,5,-15,1,1,11,1,2,3,2,3,-6,4,0,91,5,2,28 };
+	term B[MAX_TERMS];
+	term D[MAX];
 
 	transpose(A, B);
 	mmult(A, B, D);
 
-	printf("A : ");
+	printf("A : \n\n");
 
 	for (int i = 0; i < MAX_TERMS; i++)
 	{
-		for (int j = 0; j < N; j++)
-		{
-			printf("%5d", A[i][j]);
-		}
+		printf("%5d%5d%5d", A[i].row, A[i].col, A[i].val);
 		printf("\n");
 	}
 
 	printf("\n");
-	printf("transpose(A) : ");
+	printf("transpose(A) : \n\n");
 
 	for (int i = 0; i < MAX_TERMS; i++)
 	{
-		for (int j = 0; j < N; j++)
-		{
-			printf("%5d", B[i][j]);
-		}
+		printf("%5d%5d%5d", B[i].row, B[i].col, B[i].val);
 		printf("\n");
 	}
 
 	printf("\n");
-	printf("A X B : ");
+	printf("A X B : \n\n");
 
-	for (int i = 0; i < D[0][2] + 1; i++)
+	for (int i = 0; i < D[0].val + 1; i++)
 	{
-		for (int j = 0; j < N; j++)
-		{
-			printf("%5d", D[i][j]);
-		}
+		printf("%5d%5d%5d", D[i].row, D[i].col, D[i].val);
 		printf("\n");
 	}
 
 	return 0;
 }
 
-void transpose(int a[][N], int b[][N])
+void transpose(term a[], term b[])
 {
 	int n, i, j, currentb;
-	n = a[0][2] + 1;
-	b[0][0] = a[0][1];
-	b[0][1] = a[0][0];
-	b[0][2] = a[0][2];
+	n = a[0].val;
+	b[0].row = a[0].col;
+	b[0].col = a[0].row;
+	b[0].val = n;
 
 	if (n > 0)
 	{
 		currentb = 1;
-		for (i = 0; i < a[0][1]; i++)
+		for (i = 0; i < a[0].col; i++)
 		{
-			for (j = 1; j < n; j++)
+			for (j = 1; j <= n; j++)
 			{
-				if (a[j][1] == i)
+				if (a[j].col == i)
 				{
-					b[currentb][0] = a[j][1];
-					b[currentb][1] = a[j][0];
-					b[currentb][2] = a[j][2];
+					b[currentb].row = a[j].col;
+					b[currentb].col = a[j].row;
+					b[currentb].val = a[j].val;
 					currentb++;
 				}
 			}
@@ -84,15 +81,15 @@ void transpose(int a[][N], int b[][N])
 	}
 }
 
-void mmult(int a[][N], int b[][N], int d[][N])
+void mmult(term a[], term b[], term d[])
 {
 	int i, j, col, totalD = 0;
-	int rowsA = a[0][0], colsA = a[0][1], totalA = a[0][2];
-	int colsB = b[0][1], totalB = b[0][2];
-	int rowBegin = 1, row = a[1][0], sum = 0;
-	int newB[MAX_TERMS][3];
+	int rowsA = a[0].row, colsA = a[0].col, totalA = a[0].val;
+	int colsB = b[0].col, totalB = b[0].val;
+	int rowBegin = 1, row = a[1].row, sum = 0;
+	term newB[MAX_TERMS];
 
-	if (colsA != b[0][0])
+	if (colsA != b[0].row)
 	{
 		fprintf(stderr, "Incompatible matrices\n");
 		exit(1);
@@ -100,64 +97,63 @@ void mmult(int a[][N], int b[][N], int d[][N])
 
 	transpose(b, newB);
 
-	a[totalA + 1][0] = rowsA;
-	newB[totalB + 1][0] = colsB;
-	newB[totalB + 1][1] = 0;
-	col = newB[1][0];
+	a[totalA + 1].row = rowsA;
+	newB[totalB + 1].row = colsB;
+	newB[totalB + 1].col = 0;
 
 	for (i = 1; i < totalA;)
 	{
-		col = newB[1][0];
+		col = newB[1].row;
 		
 		for (j = 1; j <= totalB + 1;)
 		{
-			if (a[i][0] != row)
+			if (a[i].row != row)
 			{
 				storeSum(d, &totalD, row, col, &sum);
 				i = rowBegin;
-				for (; newB[j][0] == col; j++);
-				col = newB[j][0];
+				for (; newB[j].row == col; j++);
+				col = newB[j].row;
 			}
-			else if (newB[j][0] != col)
+			else if (newB[j].row != col)
 			{
 				storeSum(d, &totalD, row, col, &sum);
 				i = rowBegin;
-				col = newB[j][0];
+				col = newB[j].row;
 			}
-			else switch (COMPARE(a[i][1], newB[j][1]))
+			else switch (COMPARE(a[i].col, newB[j].col))
 			{
 				case -1:
 					i++;
 					break;
 				case 0:
-					sum += (a[i++][2] * newB[j++][2]);
+					sum += (a[i++].val * newB[j++].val);
 					break;
 				case 1:
 					j++;
 			}
 		}
 
-		for (; a[i][0] == row; i++);
+		for (; a[i].row == row; i++);
 		rowBegin = i;
-		row = a[i][0];
+		row = a[i].row;
 
 	}
 
-	d[0][0] = rowsA;
-	d[0][1] = colsB;
-	d[0][2] = totalD;
+	d[0].row = rowsA;
+	d[0].col = colsB;
+	d[0].val = totalD;
 
 }
 
-void storeSum(int d[][N], int* totalD, int row, int col, int* sum)
+void storeSum(term d[], int* totalD, int row, int col, int* sum)
 {
 	if (*sum)
 	{
 		if (*totalD < MAX_TERMS)
 		{
-			d[++ * totalD][0] = row;
-			d[*totalD][1] = col;
-			d[*totalD][2] = *sum;
+			d[++ * totalD].row = row;
+			d[*totalD].col = col;
+			d[*totalD].val = *sum;
 			*sum = 0;
 		}
 		else
@@ -168,11 +164,11 @@ void storeSum(int d[][N], int* totalD, int row, int col, int* sum)
 	}
 }
 
-int COMPARE(int a, int b)
+int COMPARE(int x, int y)
 {
-	if (a > b)
+	if (x > y)
 		return 1;
-	else if (a == b)
+	else if (x == y)
 		return 0;
 	else
 		return -1;
