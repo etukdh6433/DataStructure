@@ -22,34 +22,26 @@ int main(void)
 	term B[MAX_TERMS];
 	term D[MAX];
 
-	transpose(A, B);
-	mmult(A, B, D);
-
 	printf("A : \n\n");
 
 	for (int i = 0; i < MAX_TERMS; i++)
 	{
-		printf("%5d%5d%5d", A[i].row, A[i].col, A[i].val);
+		printf("%10d%10d%10d", A[i].row, A[i].col, A[i].val);
 		printf("\n");
 	}
+
+	transpose(A, B);
 
 	printf("\n");
 	printf("transpose(A) : \n\n");
 
 	for (int i = 0; i < MAX_TERMS; i++)
 	{
-		printf("%5d%5d%5d", B[i].row, B[i].col, B[i].val);
+		printf("%10d%10d%10d", B[i].row, B[i].col, B[i].val);
 		printf("\n");
 	}
 
-	printf("\n");
-	printf("A X B : \n\n");
-
-	for (int i = 0; i < D[0].val + 1; i++)
-	{
-		printf("%5d%5d%5d", D[i].row, D[i].col, D[i].val);
-		printf("\n");
-	}
+	mmult(A, B, D);
 
 	return 0;
 }
@@ -97,9 +89,10 @@ void mmult(term a[], term b[], term d[])
 
 	transpose(b, newB);
 
-	a[totalA + 1].row = rowsA;
+	// 경계조건 설정
+	/*a[totalA + 1].row = rowsA;
 	newB[totalB + 1].row = colsB;
-	newB[totalB + 1].col = 0;
+	newB[totalB + 1].col = 0;*/
 
 	for (i = 1; i < totalA;)
 	{
@@ -142,6 +135,15 @@ void mmult(term a[], term b[], term d[])
 	d[0].row = rowsA;
 	d[0].col = colsB;
 	d[0].val = totalD;
+
+	printf("\n");
+	printf("A X B : \n\n");
+
+	for (int i = 0; i < d[0].val + 1; i++)
+	{
+		printf("%10d%10d%10d", d[i].row, d[i].col, d[i].val);
+		printf("\n");
+	}
 
 }
 
