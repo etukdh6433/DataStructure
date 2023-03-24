@@ -27,7 +27,7 @@ int top;
 
 element pop();
 void push(element cur);
-void path(int maze[][MAX_SIZE], int mark[][MAX_SIZE]);
+void path(int maze[][MAX_SIZE + 2], int mark[][MAX_SIZE + 2]);
 
 int main(void)
 {
@@ -55,7 +55,7 @@ void push(element cur)
 	stack[++top] = cur;
 }
 
-void path(int maze[][MAX_SIZE], int mark[][MAX_SIZE])
+void path(int maze[][MAX_SIZE + 2], int mark[][MAX_SIZE + 2])
 {
 	int i, row, col, nextRow, nextCol, dir, found = false;
 	element position;
@@ -87,12 +87,12 @@ void path(int maze[][MAX_SIZE], int mark[][MAX_SIZE])
 
 	if (found) {
 		printf("The path is : \n");
-		printf("row col\n");
+		printf("row   col\n");
 		for (int i = 0; i <= top; i++) {
-			printf("%2d %5d", stack[i].row, stack[i].col);
+			printf("%2d %5d\n", stack[i].row, stack[i].col);
 		}
-		printf("%2d %5d", row, col);
-		printf("%2d %5d", EXIT_ROW, EXIT_COL);
+		printf("%2d %5d\n", row, col);
+		printf("%2d %5d\n", EXIT_ROW, EXIT_COL);
 	}
 	else printf("The maze does not have a path\n");
 }
