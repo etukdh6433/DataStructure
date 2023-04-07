@@ -1,5 +1,8 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 #define MAX_EXPR_SIZE 100
 #define MAX_STACK_SIZE 100
@@ -8,21 +11,39 @@ typedef enum {
 	lparen, rparen, plus, minus, times, divide, mod, eos, operand
 } precedence;
 
+void* makeArray();
 int eval(void);
 precedence getToken(char* symbol, int* n);
 int pop();
 void push(int symbol);
 
-char expr[MAX_EXPR_SIZE] = {'6','2','/', ' '};
+//char expr[MAX_EXPR_SIZE];
+//int stack[MAX_STACK_SIZE];
+char* expr;
+int* stack;
 int top;
 int n;
-int stack[MAX_STACK_SIZE];
 
 int main(void)
 {
+	makeArray();
+
+	scanf("%[^\n]s", expr);
+
 	printf("%d", eval());
 
+	free(expr);
+	free(stack);
+
 	return 0;
+}
+
+void* makeArray()
+{
+	expr = (char*)malloc(sizeof(char) * MAX_EXPR_SIZE);
+	stack = (int*)malloc(sizeof(int) * MAX_STACK_SIZE);
+
+	return expr, stack;
 }
 
 int eval(void)
