@@ -16,7 +16,7 @@ void* makeArray();
 int eval(void);
 precedence getToken(char* symbol, int* n);
 int pop();
-void push(int symbol);
+void push(int val);
 
 //char expr[MAX_EXPR_SIZE];
 //int stack[MAX_STACK_SIZE];
@@ -139,7 +139,7 @@ int pop()
 	return stack[top--];
 }
 
-void push(int symbol)
+void push(int val)
 {
-	stack[++top] = symbol;
+	stack[++top] = val;
 }
