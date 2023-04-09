@@ -1,7 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
 #include <malloc.h>
 
 #define MAX_EXPR_SIZE 100
@@ -12,6 +12,7 @@ typedef enum {
 } precedence;
 
 void* makeArray();
+//void prostfix(void);
 int eval(void);
 precedence getToken(char* symbol, int* n);
 int pop();
@@ -24,11 +25,17 @@ int* stack;
 int top;
 int n;
 
+//static int isp[] = { 0,19,12,12,13,13,13,0 };
+//static int icp[] = { 20,19,12,12,13,13,13,0 };
+
 int main(void)
 {
+	char last[2] = " ";
+	
 	makeArray();
 
-	scanf("%[^\n]s", expr);
+	scanf("%s", expr);
+	strcat(expr, last);
 
 	printf("%d", eval());
 
@@ -45,6 +52,39 @@ void* makeArray()
 
 	return expr, stack;
 }
+
+//void prostfix(void)
+//{
+//	char symbol;
+//	precedence token;
+//	int n = 0;
+//	int top = 0;
+//	stack[0] = eos;
+//	
+//	for (token == getToken(&symbol, &n); token != eos; token == getToken(&symbol, &n)) {
+//		if (token == operand) {
+//			printf("%c", symbol);
+//		}
+//		else if (token == rparen) {
+//			while (stack[top] != lparen) {
+//				printToken(pop(&top));
+//			}
+//			pop(&top);
+//		}
+//		else {
+//			while (isp[stack[top]] >= icp[token]) {
+//				printToken(pop(&top));
+//			}
+//			add(&top, token);
+//		}
+//	}
+//
+//	while ((token = pop(&top)) != eos) {
+//		printToken(token);
+//	}
+//
+//	printf("\n");
+//}
 
 int eval(void)
 {
