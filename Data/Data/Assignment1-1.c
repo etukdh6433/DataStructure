@@ -1,166 +1,166 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <malloc.h>
-
-int*** make3dArray(int deps, int rows, int cols);
-void printArray(int*** Array, int deps, int rows, int cols);
-int*** sumArray(int ***Array1, int ***Array2, int ***Array3, int deps, int rows, int cols);
-void freeArray(int***A, int deps, int rows, int cols);
-
-
-int main(void)
-{
-	int N[3] = { 3, 5, 4 };
-
-	int*** myArray1;
-	int*** myArray2;
-	int*** answerArray;
-
-	myArray1 = make3dArray(N[0], N[1], N[2]);
-	myArray2 = make3dArray(N[0], N[1], N[2]);
-	answerArray = make3dArray(N[0], N[1], N[2]);
-
-	for (int i = 0; i < N[0]; i++)
-	{
-		for (int j = 0; j < N[1]; j++)
-		{
-			for (int k = 0; k < N[2]; k++)
-			{
-				myArray1[i][j][k] = rand() % 9 + 1;
-				myArray2[i][j][k] = rand() % 9 + 1;
-			}
-		}
-	}
-
-	answerArray = sumArray(myArray1, myArray2, answerArray, N[0], N[1], N[2]);
-
-	printf("Array1 : ");
-	printArray(myArray1, N[0], N[1], N[2]);
-	printf("\n");
-	printf("Array2 : ");
-	printArray(myArray2, N[0], N[1], N[2]);
-	printf("\n");
-	printf("answerArray : ");
-	printArray(answerArray, N[0], N[1], N[2]);
-
-	for (int i = 0; i < N[0]; i++)
-	{
-		for (int j = 0; j < N[1]; j++)
-		{
-			free(myArray1[i][j]);
-		}
-	}
-
-	for (int i = 0; i < N[0]; i++)
-	{
-		free(myArray1[i]);
-	}
-
-	free(myArray1);
-
-	for (int i = 0; i < N[0]; i++)
-	{
-		for (int j = 0; j < N[1]; j++)
-		{
-			free(myArray2[i][j]);
-		}
-	}
-
-	for (int i = 0; i < N[0]; i++)
-	{
-		free(myArray2[i]);
-	}
-
-	free(myArray2);
-
-	for (int i = 0; i < N[0]; i++)
-	{
-		for (int j = 0; j < N[1]; j++)
-		{
-			free(answerArray[i][j]);
-		}
-	}
-
-	for (int i = 0; i < N[0]; i++)
-	{
-		free(answerArray[i]);
-	}
-
-	free(answerArray);
-
-	return 0;
-}
-
-int*** make3dArray(int deps, int rows, int cols)
-{
-	int*** A = 0;
-
-	A = (int***)malloc(sizeof(int**) * deps);
-
-	for (int i = 0; i < deps; i++)
-	{
-		A[i] = (int**)malloc(sizeof(int*) * rows);
-		
-		for (int j = 0; j < rows; j++)
-		{
-			A[i][j] = (int*)malloc(sizeof(int) * cols);
-		}
-	}
-
-	return A;
-}
-
-void printArray(int*** Array, int deps, int rows, int cols)
-{
-	printf("\n{");
-	for (int i = 0; i < deps; i++)
-	{
-		printf("\n	{");
-		for (int j = 0; j < rows; j++)
-		{
-			printf("\n		{");
-			for (int k = 0; k < cols; k++)
-			{
-				printf("%5d", Array[i][j][k]);
-			}
-			printf("}\n");
-		}
-		printf("	}\n");
-	}
-	printf("}\n");
-
-}
-
-int ***sumArray(int*** Array1, int ***Array2, int ***Array3, int deps, int rows, int cols)
-{
-	for (int i = 0; i < deps; i++)
-	{
-		for (int j = 0; j < rows; j++)
-		{
-			for (int k = 0; k < cols; k++)
-			{
-				Array3[i][j][k] = Array1[i][j][k] + Array2[i][j][k];
-			}
-		}
-	}
-
-	return Array3;
-}
-
-void freeArray(int ***A, int deps, int rows, int cols)
-{
-	for (int i = 0; i < deps; i++)
-	{
-		for (int j = 0; j < rows; j++)
-		{
-			free(A[i][j]);
-		}
-	}
-
-	for (int i = 0; i < deps; i++)
-	{
-		free(A[i]);
-	}
-
-	free(A); // C언어
-}
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <malloc.h>
+//
+//int*** make3darray(int deps, int rows, int cols);
+//void printarray(int*** array, int deps, int rows, int cols);
+//int*** sumarray(int ***array1, int ***array2, int ***array3, int deps, int rows, int cols);
+//void freearray(int***a, int deps, int rows, int cols);
+//
+//
+//int main(void)
+//{
+//	int n[3] = { 3, 5, 4 };
+//
+//	int*** myarray1;
+//	int*** myarray2;
+//	int*** answerarray;
+//
+//	myarray1 = make3darray(n[0], n[1], n[2]);
+//	myarray2 = make3darray(n[0], n[1], n[2]);
+//	answerarray = make3darray(n[0], n[1], n[2]);
+//
+//	for (int i = 0; i < n[0]; i++)
+//	{
+//		for (int j = 0; j < n[1]; j++)
+//		{
+//			for (int k = 0; k < n[2]; k++)
+//			{
+//				myarray1[i][j][k] = rand() % 9 + 1;
+//				myarray2[i][j][k] = rand() % 9 + 1;
+//			}
+//		}
+//	}
+//
+//	answerarray = sumarray(myarray1, myarray2, answerarray, n[0], n[1], n[2]);
+//
+//	printf("array1 : ");
+//	printarray(myarray1, n[0], n[1], n[2]);
+//	printf("\n");
+//	printf("array2 : ");
+//	printarray(myarray2, n[0], n[1], n[2]);
+//	printf("\n");
+//	printf("answerarray : ");
+//	printarray(answerarray, n[0], n[1], n[2]);
+//
+//	for (int i = 0; i < n[0]; i++)
+//	{
+//		for (int j = 0; j < n[1]; j++)
+//		{
+//			free(myarray1[i][j]);
+//		}
+//	}
+//
+//	for (int i = 0; i < n[0]; i++)
+//	{
+//		free(myarray1[i]);
+//	}
+//
+//	free(myarray1);
+//
+//	for (int i = 0; i < n[0]; i++)
+//	{
+//		for (int j = 0; j < n[1]; j++)
+//		{
+//			free(myarray2[i][j]);
+//		}
+//	}
+//
+//	for (int i = 0; i < n[0]; i++)
+//	{
+//		free(myarray2[i]);
+//	}
+//
+//	free(myarray2);
+//
+//	for (int i = 0; i < n[0]; i++)
+//	{
+//		for (int j = 0; j < n[1]; j++)
+//		{
+//			free(answerarray[i][j]);
+//		}
+//	}
+//
+//	for (int i = 0; i < n[0]; i++)
+//	{
+//		free(answerarray[i]);
+//	}
+//
+//	free(answerarray);
+//
+//	return 0;
+//}
+//
+//int*** make3darray(int deps, int rows, int cols)
+//{
+//	int*** a = 0;
+//
+//	a = (int***)malloc(sizeof(int**) * deps);
+//
+//	for (int i = 0; i < deps; i++)
+//	{
+//		a[i] = (int**)malloc(sizeof(int*) * rows);
+//		
+//		for (int j = 0; j < rows; j++)
+//		{
+//			a[i][j] = (int*)malloc(sizeof(int) * cols);
+//		}
+//	}
+//
+//	return a;
+//}
+//
+//void printarray(int*** array, int deps, int rows, int cols)
+//{
+//	printf("\n{");
+//	for (int i = 0; i < deps; i++)
+//	{
+//		printf("\n	{");
+//		for (int j = 0; j < rows; j++)
+//		{
+//			printf("\n		{");
+//			for (int k = 0; k < cols; k++)
+//			{
+//				printf("%5d", array[i][j][k]);
+//			}
+//			printf("}\n");
+//		}
+//		printf("	}\n");
+//	}
+//	printf("}\n");
+//
+//}
+//
+//int ***sumarray(int*** array1, int ***array2, int ***array3, int deps, int rows, int cols)
+//{
+//	for (int i = 0; i < deps; i++)
+//	{
+//		for (int j = 0; j < rows; j++)
+//		{
+//			for (int k = 0; k < cols; k++)
+//			{
+//				array3[i][j][k] = array1[i][j][k] + array2[i][j][k];
+//			}
+//		}
+//	}
+//
+//	return array3;
+//}
+//
+//void freearray(int ***a, int deps, int rows, int cols)
+//{
+//	for (int i = 0; i < deps; i++)
+//	{
+//		for (int j = 0; j < rows; j++)
+//		{
+//			free(a[i][j]);
+//		}
+//	}
+//
+//	for (int i = 0; i < deps; i++)
+//	{
+//		free(a[i]);
+//	}
+//
+//	free(a); // c언어
+//}
